@@ -2,16 +2,11 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+const FALLBACK_GOOGLE_CLIENT_ID = '643505127014-t43qjj12sfnc4emoci8l5pc1ue8880iop.apps.googleusercontent.com';
+
 export async function GET(request: Request) {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientId = process.env.GOOGLE_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID;
   const baseUrl = process.env.NEXTAUTH_URL || new URL(request.url).origin;
-
-  if (!clientId) {
-    return NextResponse.redirect(
-      new URL('/?error=Missing%20GOOGLE_CLIENT_ID', baseUrl)
-    );
-  }
-
   const redirectUri = `${baseUrl}/api/gmail/oauth/callback`;
 
   const params = new URLSearchParams({
